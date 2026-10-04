@@ -1,184 +1,1836 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<title>Início</title>
-<script src="./vendor/react.js"></script>
-<script src="./vendor/react-dom.js"></script>
-<script src="./support.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="App Bancário Moderno e Interativo - Bradesco Mobile">
+  <title>App Bancário | Início</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #C8143C;
+      --accent-dark: #D93A5C;
+      --accent-gradient: linear-gradient(180deg, #C8143C 0%, #D93A5C 100%);
+      --page-bg: #F4F4F7;
+      --card-bg: #FFFFFF;
+      --text-main: #2B2B33;
+      --text-muted: #555560;
+      --text-subtle: #8A8A96;
+      --radius: 18px;
+      --shadow-sm: 0 4px 14px rgba(40, 30, 50, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+      --success: #2FBF4A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #181920;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Container do App com aspecto de Celular no Desktop */
+    .app-viewport {
+      width: 100%;
+      max-width: 414px;
+      height: 100vh;
+      max-height: 896px;
+      background: var(--page-bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    @media (min-width: 480px) {
+      .app-viewport {
+        border-radius: 36px;
+        border: 8px solid #282932;
+        height: 844px;
+      }
+    }
+
+    /* Status Bar simulada */
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .status-bar-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    /* Conteúdo com rolagem suave */
+    .app-scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 96px;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    .app-scroll-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Botões Globais */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 0;
+      outline: none;
+      background: transparent;
+      user-select: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:active {
+      transform: scale(0.95);
+      opacity: 0.88;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* CABEÇALHO */
+    .header {
+      position: relative;
+      height: 318px;
+      padding: 42px 20px 0;
+      background: var(--accent-gradient);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      flex-shrink: 0;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .user-greeting {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 24px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 250px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      position: relative;
+    }
+
+    .badge-count {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 5px;
+      border-radius: 11px;
+      background: var(--success);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 22px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* Saldo */
+    .balance-box {
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .balance-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      opacity: 0.9;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .balance-amount {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 38px;
+      letter-spacing: -0.5px;
+      min-width: 140px;
+      transition: all 0.2s ease;
+    }
+
+    .balance-link {
+      display: inline-block;
+      padding: 8px 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* BIA Assistente Virtual */
+    .bia-bar {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 54px;
+      padding: 0 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .bia-bar:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .bia-avatar {
+      width: 36px;
+      height: 36px;
+      flex: none;
+      border-radius: 50%;
+      background: #FFFFFF;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 36px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .bia-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    /* Onda estilizada na base do cabeçalho */
+    .header-wave {
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 100%;
+      height: 44px;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* FAVORITOS */
+    .section-favoritos {
+      padding: 14px 20px 0;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #2B2B33;
+    }
+
+    .grid-favoritos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .card-favorito {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 92px;
+      padding: 8px 4px;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      color: var(--accent);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card-favorito:hover {
+      box-shadow: 0 6px 18px rgba(40, 30, 50, 0.12);
+    }
+
+    .card-favorito.accent-blue {
+      color: #3F6FC4;
+    }
+
+    .card-favorito.accent-blue .label-favorito {
+      color: #2F5DB0;
+    }
+
+    .label-favorito {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3A3A44;
+      text-align: center;
+      line-height: 13px;
+    }
+
+    /* OFERTAS */
+    .section-ofertas {
+      padding: 20px 20px 10px;
+    }
+
+    .card-oferta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px 12px 12px;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-oferta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(40, 30, 50, 0.12);
+    }
+
+    .oferta-icon-box {
+      flex: none;
+      width: 76px;
+      height: 76px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #FFE8EC, #FDD6DC);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .oferta-info {
+      flex: 1;
+    }
+
+    .oferta-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 19px;
+      color: #2B2B33;
+    }
+
+    .oferta-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 16px;
+      color: #666675;
+    }
+
+    .dots-carousel {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: #D2D2D9;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      width: 26px;
+      background: var(--accent);
+    }
+
+    /* CARTÃO RÁPIDO ADICIONAL */
+    .section-cartao {
+      padding: 10px 20px 10px;
+    }
+
+    .card-preview-banner {
+      background: linear-gradient(135deg, #1C1F2B 0%, #2A2E3D 100%);
+      color: #FFFFFF;
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .card-preview-info h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-preview-info p {
+      font-size: 12px;
+      color: #A0A5BA;
+    }
+
+    .card-preview-chip {
+      background: rgba(255,255,255,0.12);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    /* NAVEGAÇÃO INFERIOR */
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 84px;
+      padding: 6px 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+      box-shadow: 0 -4px 16px rgba(40, 30, 50, 0.08);
+      z-index: 50;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 0;
+      background: transparent;
+      color: #8A8A96;
+      transition: color 0.2s ease;
+    }
+
+    .nav-icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 36px;
+      border-radius: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: #2B2B33;
+    }
+
+    .nav-item.active .nav-icon-container {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* MODAL / BOTTOM SHEET */
+    .sheet-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 20, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .sheet-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .sheet-content {
+      width: 100%;
+      max-height: 85%;
+      background: #FFFFFF;
+      border-radius: 26px 26px 0 0;
+      padding: 20px 20px 30px;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: var(--shadow-lg);
+      overflow-y: auto;
+    }
+
+    .sheet-overlay.active .sheet-content {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 5px;
+      border-radius: 3px;
+      background: #D8D8DF;
+      margin: 0 auto 16px;
+      flex-shrink: 0;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2B2B33;
+    }
+
+    .sheet-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #F0F0F4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555560;
+      font-size: 16px;
+    }
+
+    /* TOAST DE FEEDBACK */
+    .toast {
+      position: absolute;
+      top: 50px;
+      left: 20px;
+      right: 20px;
+      background: #2B2B33;
+      color: #FFFFFF;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(-80px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* LISTA DE EXTRATO */
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #F7F7FA;
+      border-radius: 14px;
+    }
+
+    .transaction-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .transaction-icon.in {
+      background: #E6F8EB;
+      color: #2FBF4A;
+    }
+
+    .transaction-icon.out {
+      background: #FDE8EC;
+      color: #C8143C;
+    }
+
+    .transaction-meta {
+      flex: 1;
+      margin-left: 12px;
+    }
+
+    .transaction-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2B2B33;
+    }
+
+    .transaction-date {
+      font-size: 11px;
+      color: #8A8A96;
+      margin-top: 2px;
+    }
+
+    .transaction-val {
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .transaction-val.in {
+      color: #2FBF4A;
+    }
+
+    .transaction-val.out {
+      color: #2B2B33;
+    }
+
+    /* ABA CHAT BIA INTERATIVA */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px 16px 85px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    .chat-bubble.bia {
+      background: #FFFFFF;
+      color: #2B2B33;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .chat-bubble.user {
+      background: var(--accent);
+      color: #FFFFFF;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-quick-actions {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 8px 0;
+    }
+
+    .quick-chip {
+      background: #FFFFFF;
+      border: 1px solid #E2E2E8;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #3A3A44;
+      white-space: nowrap;
+    }
+
+    .chat-input-bar {
+      display: flex;
+      gap: 8px;
+      background: #FFFFFF;
+      padding: 8px 12px;
+      border-radius: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      margin-top: 8px;
+    }
+
+    .chat-input-bar input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    .chat-input-bar button {
+      background: var(--accent);
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* PÁGINAS ALTERNATIVAS (SHOP, PERFIL, SERVIÇOS) */
+    .tab-view {
+      display: none;
+      padding: 40px 20px 100px;
+    }
+
+    .tab-view.active {
+      display: block;
+    }
+
+    .tab-header-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2B2B33;
+      margin-bottom: 16px;
+    }
+
+    .card-shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card-shop-item {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .shop-cashback {
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* CARTÃO VIRTUAL */
+    .virtual-card {
+      background: linear-gradient(135deg, #C8143C 0%, #790822 100%);
+      border-radius: 20px;
+      color: #FFFFFF;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(200, 20, 60, 0.35);
+      margin-bottom: 20px;
+    }
+
+    .virtual-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .virtual-card-number {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin: 22px 0 16px;
+    }
+
+    .virtual-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body>
-<x-dc>
-<helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<style>
-body{margin:0}
-button{font-family:inherit;cursor:pointer}
-a{color:#fff}
-</style>
-</helmet>
-<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: {{pageBg}}; font-family: 'Montserrat', sans-serif; color: #2B2B33">
 
-<!-- CABEÇALHO -->
-<div style="position: relative; box-sizing: border-box; height: 318px; padding: 40px 20px 0; background: linear-gradient(180deg, {{accent}} 0%, {{accentDark}} 100%); color: #FFFFFF">
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
-<h1 style="margin: 0; font-size: 18px; font-weight: 700; line-height: 24px">Olá, Matheus Silva do...</h1>
-<div style="display: flex; align-items: center; gap: 12px">
-<button aria-label="Notificações" style="position: relative; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>
-<span style="position: absolute; top: 0; right: 0; min-width: 22px; height: 22px; box-sizing: border-box; padding: 0 5px; border-radius: 11px; background: #2FBF4A; color: #FFFFFF; font-size: 12px; font-weight: 700; line-height: 22px; text-align: center">68</span>
-</button>
-<button aria-label="Sair" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF">
-<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H9"></path></svg>
-</button>
-</div>
-</div>
+  <div class="app-viewport">
+    
+    <!-- Barra de Status Simulada -->
+    <div class="status-bar" id="statusBar">
+      <span id="statusClock">18:45</span>
+      <div class="status-bar-icons">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+      </div>
+    </div>
 
-<div style="margin-top: 22px; display: flex; align-items: flex-end; justify-content: space-between">
-<div>
-<div style="font-size: 14px; font-weight: 600; line-height: 20px">Saldo</div>
-<div style="display: flex; align-items: center; gap: 8px">
-<span style="font-size: 28px; font-weight: 700; line-height: 40px">{{saldo}}</span>
-<button aria-label="Ocultar saldo" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 20L20 4"></path></svg>
-</button>
-</div>
-</div>
-<a href="#extrato" style="display: inline-block; padding: 12px 0 14px; font-size: 14px; font-weight: 700; text-decoration: underline">Ver extrato</a>
-</div>
+    <!-- Toast de Notificações / Ações -->
+    <div class="toast" id="appToast">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2FBF4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <span id="toastMsg">Ação concluída com sucesso!</span>
+    </div>
 
-<div style="margin-top: 14px; display: flex; align-items: center; gap: 12px; box-sizing: border-box; height: 56px; padding: 0 12px; border-radius: 18px; background: rgba(255,255,255,0.14)">
-<div style="width: 36px; height: 36px; flex: none; border-radius: 50%; background: #FFFFFF; color: {{accent}}; font-size: 11px; font-weight: 700; line-height: 36px; text-align: center">BIA</div>
-<div style="flex: 1; font-size: 15px; font-weight: 600">Como posso ajudar?</div>
-<button aria-label="Enviar" style="width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #FFFFFF">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 3L3 10.5l7 3 3 7L21 3z"></path><path d="M10 13.5L21 3"></path></svg>
-</button>
-</div>
+    <!-- ABA 1: INÍCIO (PRINCIPAL) -->
+    <div class="tab-view active" id="tabInicio" style="padding: 0; height: 100%;">
+      <div class="app-scroll-content">
+        
+        <!-- CABEÇALHO COM SALDO E BIA -->
+        <header class="header">
+          <div class="header-top">
+            <h1 class="user-greeting">Olá, Matheus Silva</h1>
+            <div class="header-actions">
+              <!-- Botão Notificações -->
+              <button class="btn-icon" id="btnNotificacoes" aria-label="Notificações" title="Notificações">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9z"></path>
+                  <path d="M10 20a2 2 0 0 0 4 0"></path>
+                </svg>
+                <span class="badge-count" id="badgeNotif">68</span>
+              </button>
 
-<svg style="position: absolute; left: 0; bottom: -1px; display: block" width="390" height="44" viewBox="0 0 390 44" preserveAspectRatio="none"><path d="M0 26C60 6 120 6 190 24S320 42 390 14V44H0Z" fill="#FFFFFF" fill-opacity="0.35"></path><path d="M0 34C70 16 130 18 200 32S330 46 390 26V44H0Z" fill="{{pageBg}}"></path></svg>
-</div>
+              <!-- Botão Sair -->
+              <button class="btn-icon" id="btnSair" aria-label="Sair" title="Sair da conta">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"></path>
+                  <path d="M14 8l4 4-4 4"></path>
+                  <path d="M18 12H9"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
 
-<!-- FAVORITOS -->
-<section style="padding: 14px 20px 0">
-<h2 style="margin: 0 0 14px; font-size: 18px; font-weight: 600; line-height: 24px">Favoritos</h2>
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px">
+          <!-- Saldo em Conta -->
+          <div class="balance-box">
+            <div>
+              <div class="balance-title">Saldo</div>
+              <div class="balance-row">
+                <span class="balance-amount" id="balanceAmount">R$ 360,17</span>
+                <button class="btn-icon" id="btnToggleBalance" aria-label="Alternar exibição do saldo" title="Ocultar/Mostrar saldo">
+                  <!-- Ícone Olho com traço (ativo quando visível) -->
+                  <svg id="eyeIcon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M4 20L20 4"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <a href="javascript:void(0)" class="balance-link" id="btnExtrato">Ver extrato</a>
+          </div>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h14l-3-3"></path><path d="M20 15H6l3 3"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Transferências</span>
-</button>
+          <!-- Barra de Atalho da BIA -->
+          <div class="bia-bar" id="biaBarQuick">
+            <div class="bia-avatar">BIA</div>
+            <div class="bia-text">Como posso ajudar?</div>
+            <button class="btn-icon" aria-label="Enviar para BIA">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
+                <path d="M21 3L3 10.5l7 3 3 7L21 3z"></path>
+                <path d="M10 13.5L21 3"></path>
+              </svg>
+            </button>
+          </div>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 3.5l3 3-3 3-3-3z"></path><path d="M12 14.5l3 3-3 3-3-3z"></path><path d="M3.5 12l3-3 3 3-3 3z"></path><path d="M14.5 12l3-3 3 3-3 3z"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Pix</span>
-</button>
+          <!-- Onda SVG no Rodapé do Cabeçalho -->
+          <svg class="header-wave" viewBox="0 0 390 44" preserveAspectRatio="none">
+            <path d="M0 26C60 6 120 6 190 24S320 42 390 14V44H0Z" fill="#FFFFFF" fill-opacity="0.35"></path>
+            <path d="M0 34C70 16 130 18 200 32S330 46 390 26V44H0Z" fill="#F4F4F7"></path>
+          </svg>
+        </header>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="M8 9v6M10.5 9v6M13 9v6M15.5 9v6"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Pagamentos</span>
-</button>
+        <!-- FAVORITOS -->
+        <section class="section-favoritos">
+          <h2 class="section-title">Favoritos</h2>
+          <div class="grid-favoritos">
+            
+            <button class="card-favorito" data-action="transfer">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 9h14l-3-3"></path><path d="M20 15H6l3 3"></path>
+              </svg>
+              <span class="label-favorito">Transferências</span>
+            </button>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M3 10.5h18M6.5 14.5h4"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Cartões</span>
-</button>
+            <button class="card-favorito" data-action="pix">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+                <path d="M12 3.5l3 3-3 3-3-3z"></path>
+                <path d="M12 14.5l3 3-3 3-3-3z"></path>
+                <path d="M3.5 12l3-3 3 3-3 3z"></path>
+                <path d="M14.5 12l3-3 3 3-3 3z"></path>
+              </svg>
+              <span class="label-favorito">Pix</span>
+            </button>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M14.5 9.5c-.5-1-1.5-1.3-2.5-1.3-1.4 0-2.4.7-2.4 1.8 0 2.6 5 1.2 5 3.9 0 1.1-1.1 1.9-2.6 1.9-1.1 0-2.1-.5-2.6-1.4M12 6.5v1.7M12 15.8v1.7"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Empréstimos</span>
-</button>
+            <button class="card-favorito" data-action="pagamentos">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path>
+                <path d="M8 9v6M10.5 9v6M13 9v6M15.5 9v6"></path>
+              </svg>
+              <span class="label-favorito">Pagamentos</span>
+            </button>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5h17"></path><path d="M4.5 17l5-6 3.5 3L19 7"></path><path d="M15 7h4v4"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Investimentos</span>
-</button>
+            <button class="card-favorito" data-action="cartoes">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="18" height="12" rx="2"></rect>
+                <path d="M3 10.5h18M6.5 14.5h4"></path>
+              </svg>
+              <span class="label-favorito">Cartões</span>
+            </button>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: {{accent}}">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="butt"><path d="M12 4a8 8 0 0 1 7.6 5.5"></path><path d="M19.9 14a8 8 0 0 1-5.4 5.6"></path><path d="M9.5 19.6A8 8 0 0 1 4 12"></path></svg>
-<span style="font-size: 11px; font-weight: 500; color: #3A3A44">Open Finance</span>
-</button>
+            <button class="card-favorito" data-action="emprestimos">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8.5"></circle>
+                <path d="M14.5 9.5c-.5-1-1.5-1.3-2.5-1.3-1.4 0-2.4.7-2.4 1.8 0 2.6 5 1.2 5 3.9 0 1.1-1.1 1.9-2.6 1.9-1.1 0-2.1-.5-2.6-1.4M12 6.5v1.7M12 15.8v1.7"></path>
+              </svg>
+              <span class="label-favorito">Empréstimos</span>
+            </button>
 
-<button style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 92px; padding: 8px 2px; border: 0; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: #3F6FC4">
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path><circle cx="9" cy="7" r="2" fill="#FFFFFF"></circle><circle cx="15" cy="12" r="2" fill="#FFFFFF"></circle><circle cx="8" cy="17" r="2" fill="#FFFFFF"></circle></svg>
-<span style="font-size: 11px; font-weight: 500; color: #2F5DB0">Personalizar</span>
-</button>
+            <button class="card-favorito" data-action="investimentos">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.5 20.5h17"></path><path d="M4.5 17l5-6 3.5 3L19 7"></path><path d="M15 7h4v4"></path>
+              </svg>
+              <span class="label-favorito">Investimentos</span>
+            </button>
 
-</div>
-</section>
+            <button class="card-favorito" data-action="openfinance">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                <path d="M12 4a8 8 0 0 1 7.6 5.5"></path>
+                <path d="M19.9 14a8 8 0 0 1-5.4 5.6"></path>
+                <path d="M9.5 19.6A8 8 0 0 1 4 12"></path>
+              </svg>
+              <span class="label-favorito">Open Finance</span>
+            </button>
 
-<!-- OFERTAS -->
-<section style="padding: 20px 20px 0">
-<h2 style="margin: 0 0 12px; font-size: 18px; font-weight: 600; line-height: 24px">Ofertas</h2>
-<a href="#oferta" style="display: flex; align-items: center; gap: 14px; box-sizing: border-box; padding: 10px 14px 10px 10px; border-radius: {{radius}}; background: #FFFFFF; box-shadow: 0 4px 14px rgba(40,30,50,0.08); color: #2B2B33; text-decoration: none">
-<div role="img" aria-label="Imagem da oferta" style="flex: none; width: 96px; height: 96px; border-radius: 14px; background: linear-gradient(135deg, #D9DCE3, #B9BEC9); display: flex; align-items: center; justify-content: center; color: #FFFFFF">
-<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"></circle><path d="M5 20c0-3.6 3-6 7-6s7 2.4 7 6"></path></svg>
-</div>
-<div style="flex: 1">
-<div style="font-size: 15px; font-weight: 600; line-height: 22px">Precisando de mais dinheiro extra? Aqui você tem</div>
-<div style="margin-top: 6px; font-size: 12px; font-weight: 500; line-height: 16px; color: #555560">Confira o limite disponível.</div>
-</div>
-<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
-</a>
-<div style="margin-top: 12px; display: flex; justify-content: center; gap: 6px">
-<span style="width: 28px; height: 5px; border-radius: 3px; background: {{accent}}"></span>
-<span style="width: 5px; height: 5px; border-radius: 3px; background: #D2D2D9"></span>
-</div>
-</section>
+            <button class="card-favorito accent-blue" data-action="personalizar">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M4 7h16M4 12h16M4 17h16"></path>
+                <circle cx="9" cy="7" r="2" fill="#FFFFFF"></circle>
+                <circle cx="15" cy="12" r="2" fill="#FFFFFF"></circle>
+                <circle cx="8" cy="17" r="2" fill="#FFFFFF"></circle>
+              </svg>
+              <span class="label-favorito">Personalizar</span>
+            </button>
 
-<!-- NAVEGAÇÃO INFERIOR -->
-<nav style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; height: 84px; padding: 8px 8px 12px; display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; box-shadow: 0 -4px 16px rgba(40,30,50,0.08)">
+          </div>
+        </section>
 
-<button style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #4A4A55">
-<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 40px; border-radius: 14px; background: {{accent}}; color: #FFFFFF">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"></path></svg>
-</span>
-<span style="font-size: 12px; font-weight: 600">Início</span>
-</button>
+        <!-- CARTÃO RÁPIDO -->
+        <section class="section-cartao">
+          <div class="card-preview-banner" id="bannerCartao">
+            <div class="card-preview-info">
+              <h3>Cartão de Crédito Elo Nanquim</h3>
+              <p>Fatura atual: <strong>R$ 1.240,50</strong> • Vencimento 15/10</p>
+            </div>
+            <div class="card-preview-chip">Ver Cartão</div>
+          </div>
+        </section>
 
-<button style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #5C5C68">
-<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 40px; color: #8A8A96">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-7l-4 4v-4H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"></path><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"></path></svg>
-</span>
-<span style="font-size: 12px; font-weight: 600">Chat</span>
-</button>
+        <!-- OFERTAS EM CARROSSEL -->
+        <section class="section-ofertas">
+          <h2 class="section-title">Ofertas</h2>
+          
+          <div class="card-oferta" id="cardOferta">
+            <div class="oferta-icon-box" id="ofertaIcon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 7v5l3 3"></path>
+              </svg>
+            </div>
+            <div class="oferta-info">
+              <div class="oferta-title" id="ofertaTitulo">Precisando de dinheiro extra?</div>
+              <div class="oferta-sub" id="ofertaSub">Confira seu limite pré-aprovado de até R$ 15.000.</div>
+            </div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
 
-<button style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #5C5C68">
-<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 40px; color: #8A8A96">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l1 12H4z"></path><path d="M9 10V7a3 3 0 0 1 6 0v3"></path></svg>
-</span>
-<span style="font-size: 12px; font-weight: 600">Shop</span>
-</button>
+          <div class="dots-carousel">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+        </section>
 
-<button style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #5C5C68">
-<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 40px; color: #8A8A96">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.8"></circle><path d="M4.5 20c.4-4 3.4-6.2 7.5-6.2s7.1 2.2 7.5 6.2z"></path></svg>
-</span>
-<span style="font-size: 12px; font-weight: 600">Perfil</span>
-</button>
+      </div>
+    </div>
 
-<button style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #5C5C68">
-<span style="display: flex; align-items: center; justify-content: center; width: 52px; height: 40px; color: #8A8A96">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.2"></rect><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"></rect><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"></rect><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"></rect></svg>
-</span>
-<span style="font-size: 12px; font-weight: 600">Serviços</span>
-</button>
+    <!-- ABA 2: CHAT COM A BIA -->
+    <div class="tab-view" id="tabChat" style="height: 100%;">
+      <div class="chat-container">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div class="bia-avatar" style="width: 44px; height: 44px; line-height: 44px; font-size: 13px;">BIA</div>
+          <div>
+            <h2 style="font-size: 16px; font-weight: 700;">BIA - Inteligência Bradesco</h2>
+            <span style="font-size: 11px; color: var(--success); font-weight: 600;">● Online agora</span>
+          </div>
+        </div>
 
-</nav>
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8143C"},"accentDark":{"editor":"color","default":"#D93A5C"},"pageBg":{"editor":"color","default":"#F4F4F7"},"saldo":{"editor":"text","default":"R$ 360,17"},"radius":{"editor":"text","default":"18px"},"$preview":{"width":390,"height":844}}'>
-class Component extends DCLogic {
-renderVals() {
-return {
-accent: this.props.accent ?? '#C8143C',
-accentDark: this.props.accentDark ?? '#D93A5C',
-pageBg: this.props.pageBg ?? '#F4F4F7',
-saldo: this.props.saldo ?? 'R$ 360,17',
-radius: this.props.radius ?? '18px'
-};
-}
-}
-</script>
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-bubble bia">
+            Olá, Matheus! Eu sou a BIA. Como posso te ajudar hoje com suas finanças?
+          </div>
+          <div class="chat-bubble bia">
+            Você pode me perguntar sobre saldo, fazer um Pix, consultar fatura ou tirar dúvidas.
+          </div>
+        </div>
+
+        <div class="chat-quick-actions">
+          <button class="quick-chip" data-ask="Qual é o meu saldo?">💰 Qual meu saldo?</button>
+          <button class="quick-chip" data-ask="Quero fazer um Pix">⚡ Fazer Pix</button>
+          <button class="quick-chip" data-ask="Ver fatura do cartão">💳 Ver fatura</button>
+          <button class="quick-chip" data-ask="Simular empréstimo">📊 Empréstimo</button>
+        </div>
+
+        <div class="chat-input-bar">
+          <input type="text" id="chatInput" placeholder="Digite sua mensagem para a BIA..." />
+          <button id="btnSendChat" aria-label="Enviar mensagem">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 3: SHOPPING & CASHBACK -->
+    <div class="tab-view" id="tabShop">
+      <div class="app-scroll-content">
+        <h2 class="tab-header-title">Bradesco Shop</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Compre com descontos e receba cashback direto na sua conta!</p>
+        
+        <div class="card-shop-grid">
+          <div class="card-shop-item">
+            <div style="font-weight: 700; font-size: 15px;">Amazon</div>
+            <div style="font-size: 12px; color: #666;">Eletrônicos e Livros</div>
+            <div class="shop-cashback">Até 8% de volta</div>
+          </div>
+          <div class="card-shop-item">
+            <div style="font-weight: 700; font-size: 15px;">Magazine Luiza</div>
+            <div style="font-size: 12px; color: #666;">Tudo para sua casa</div>
+            <div class="shop-cashback">Até 10% de volta</div>
+          </div>
+          <div class="card-shop-item">
+            <div style="font-weight: 700; font-size: 15px;">Droga Raia</div>
+            <div style="font-size: 12px; color: #666;">Saúde e Beleza</div>
+            <div class="shop-cashback">Até 12% de volta</div>
+          </div>
+          <div class="card-shop-item">
+            <div style="font-weight: 700; font-size: 15px;">Nike</div>
+            <div style="font-size: 12px; color: #666;">Roupas e Calçados</div>
+            <div class="shop-cashback">Até 7% de volta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 4: PERFIL -->
+    <div class="tab-view" id="tabPerfil">
+      <div class="app-scroll-content">
+        <h2 class="tab-header-title">Meu Perfil</h2>
+        
+        <div style="background: #FFFFFF; padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">MS</div>
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700;">Matheus Silva</h3>
+              <p style="font-size: 12px; color: var(--text-muted);">Agência: 2480 • Conta: 10452-8</p>
+              <p style="font-size: 11px; color: var(--success); font-weight: 600; margin-top: 4px;">✔ Conta Verificada (Bradesco Prime)</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;">
+          <div style="padding: 14px 18px; border-bottom: 1px solid #F0F0F4; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <span style="font-size: 13px; font-weight: 600;">🔒 Segurança e Senhas</span>
+            <span style="color: #999;">›</span>
+          </div>
+          <div style="padding: 14px 18px; border-bottom: 1px solid #F0F0F4; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <span style="font-size: 13px; font-weight: 600;">📱 Chaves Pix cadastradas</span>
+            <span style="color: #999;">›</span>
+          </div>
+          <div style="padding: 14px 18px; border-bottom: 1px solid #F0F0F4; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <span style="font-size: 13px; font-weight: 600;">📑 Comprovantes e Relatórios</span>
+            <span style="color: #999;">›</span>
+          </div>
+          <div style="padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+            <span style="font-size: 13px; font-weight: 600;">❓ Ajuda e Fale Conosco</span>
+            <span style="color: #999;">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 5: SERVIÇOS -->
+    <div class="tab-view" id="tabServicos">
+      <div class="app-scroll-content">
+        <h2 class="tab-header-title">Todos os Serviços</h2>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: #FFF; padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Dia a Dia</h4>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 18px;">Pix, Transferências TED/DOC, Pagamentos de Contas, Recarga de Celular, Débito Automático.</p>
+          </div>
+          <div style="background: #FFF; padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Crédito e Financiamento</h4>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 18px;">Empréstimo Pessoal, Cheque Especial, Financiamento de Veículos e Imóveis.</p>
+          </div>
+          <div style="background: #FFF; padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Investimentos</h4>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 18px;">CDB, Tesouro Direto, Fundos de Investimento, Ações Ágora Investimentos.</p>
+          </div>
+          <div style="background: #FFF; padding: 16px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+            <h4 style="font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Seguros e Previdência</h4>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 18px;">Seguro de Vida, Seguro Auto, Seguro Residencial, Previdência Privada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL / BOTTOM SHEET UNIVERSAL -->
+    <div class="sheet-overlay" id="sheetOverlay">
+      <div class="sheet-content" id="sheetContent">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <h3 class="sheet-title" id="sheetTitle">Detalhes</h3>
+          <button class="sheet-close" id="btnSheetClose">✕</button>
+        </div>
+        <div class="sheet-body" id="sheetBody">
+          <!-- Conteúdo dinâmico injetado via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav">
+      
+      <button class="nav-item active" data-tab="tabInicio">
+        <span class="nav-icon-container">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"></path>
+          </svg>
+        </span>
+        <span class="nav-label">Início</span>
+      </button>
+
+      <button class="nav-item" data-tab="tabChat">
+        <span class="nav-icon-container">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-7l-4 4v-4H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"></path>
+            <path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"></path>
+          </svg>
+        </span>
+        <span class="nav-label">Chat</span>
+      </button>
+
+      <button class="nav-item" data-tab="tabShop">
+        <span class="nav-icon-container">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 8h14l1 12H4z"></path><path d="M9 10V7a3 3 0 0 1 6 0v3"></path>
+          </svg>
+        </span>
+        <span class="nav-label">Shop</span>
+      </button>
+
+      <button class="nav-item" data-tab="tabPerfil">
+        <span class="nav-icon-container">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="3.8"></circle>
+            <path d="M4.5 20c.4-4 3.4-6.2 7.5-6.2s7.1 2.2 7.5 6.2z"></path>
+          </svg>
+        </span>
+        <span class="nav-label">Perfil</span>
+      </button>
+
+      <button class="nav-item" data-tab="tabServicos">
+        <span class="nav-icon-container">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+            <rect x="4" y="4" width="6.5" height="6.5" rx="1.2"></rect>
+            <rect x="13.5" y="4" width="6.5" height="6.5" rx="1.2"></rect>
+            <rect x="4" y="13.5" width="6.5" height="6.5" rx="1.2"></rect>
+            <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.2"></rect>
+          </svg>
+        </span>
+        <span class="nav-label">Serviços</span>
+      </button>
+
+    </nav>
+
+  </div>
+
+  <!-- SCRIPT DE INTERATIVIDADE COMPLETA -->
+  <script>
+    (function() {
+      // Estado da aplicação
+      let state = {
+        saldo: 360.17,
+        saldoVisivel: true,
+        notificacoes: 68,
+        ofertaAtual: 0,
+        transacoes: [
+          { tipo: 'in', desc: 'Pix recebido de Carlos Eduardo', data: 'Hoje, 14:22', val: 150.00 },
+          { tipo: 'out', desc: 'Padaria Pão & Cia', data: 'Hoje, 09:15', val: 24.50 },
+          { tipo: 'out', desc: 'Supermercado Extra', data: 'Ontem, 18:30', val: 185.90 },
+          { tipo: 'in', desc: 'Transferência Recebida', data: '02 Out, 11:00', val: 320.00 },
+          { tipo: 'out', desc: 'Pagamento Fatura Cartão', data: '30 Set, 08:45', val: 850.00 }
+        ],
+        ofertas: [
+          {
+            titulo: 'Precisando de dinheiro extra?',
+            sub: 'Confira seu limite pré-aprovado de até R$ 15.000.',
+            icone: '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>'
+          },
+          {
+            titulo: 'Cartão de Crédito Black',
+            sub: 'Zero anuidade no 1º ano e 2.5 pontos por dólar gasto.',
+            icone: '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M3 10.5h18"></path></svg>'
+          },
+          {
+            titulo: 'Invista no CDB 120% do CDI',
+            sub: 'Rendimento diário com garantia do FGC.',
+            icone: '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 20h18M5 16l4-5 4 4 6-8"></path></svg>'
+          }
+        ]
+      };
+
+      // Elementos do DOM
+      const balanceAmount = document.getElementById('balanceAmount');
+      const btnToggleBalance = document.getElementById('btnToggleBalance');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const btnExtrato = document.getElementById('btnExtrato');
+      const btnNotificacoes = document.getElementById('btnNotificacoes');
+      const badgeNotif = document.getElementById('badgeNotif');
+      const btnSair = document.getElementById('btnSair');
+      const biaBarQuick = document.getElementById('biaBarQuick');
+      const sheetOverlay = document.getElementById('sheetOverlay');
+      const sheetTitle = document.getElementById('sheetTitle');
+      const sheetBody = document.getElementById('sheetBody');
+      const btnSheetClose = document.getElementById('btnSheetClose');
+      const appToast = document.getElementById('appToast');
+      const toastMsg = document.getElementById('toastMsg');
+      const cardOferta = document.getElementById('cardOferta');
+      const ofertaTitulo = document.getElementById('ofertaTitulo');
+      const ofertaSub = document.getElementById('ofertaSub');
+      const ofertaIcon = document.getElementById('ofertaIcon');
+      const dots = document.querySelectorAll('.dot');
+      const bannerCartao = document.getElementById('bannerCartao');
+
+      // Relógio em tempo real
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const clockEl = document.getElementById('statusClock');
+        if (clockEl) clockEl.textContent = `${h}:${m}`;
+      }
+      updateClock();
+      setInterval(updateClock, 30000);
+
+      // Exibir Toast
+      function showToast(msg) {
+        toastMsg.textContent = msg;
+        appToast.classList.add('show');
+        setTimeout(() => {
+          appToast.classList.remove('show');
+        }, 3000);
+      }
+
+      // Alternar visualização de saldo
+      function formatMoney(val) {
+        return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      }
+
+      function updateBalanceDisplay() {
+        if (state.saldoVisivel) {
+          balanceAmount.textContent = formatMoney(state.saldo);
+          eyeIcon.innerHTML = `
+            <path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M4 20L20 4"></path>
+          `;
+        } else {
+          balanceAmount.textContent = '••••••••';
+          eyeIcon.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          `;
+        }
+      }
+
+      btnToggleBalance.addEventListener('click', () => {
+        state.saldoVisivel = !state.saldoVisivel;
+        updateBalanceDisplay();
+        showToast(state.saldoVisivel ? 'Saldo visível' : 'Saldo ocultado com segurança');
+      });
+
+      // Abrir e fechar Modal/Sheet
+      function openSheet(title, htmlContent) {
+        sheetTitle.textContent = title;
+        sheetBody.innerHTML = htmlContent;
+        sheetOverlay.classList.add('active');
+      }
+
+      function closeSheet() {
+        sheetOverlay.classList.remove('active');
+      }
+
+      btnSheetClose.addEventListener('click', closeSheet);
+      sheetOverlay.addEventListener('click', (e) => {
+        if (e.target === sheetOverlay) closeSheet();
+      });
+
+      // Extrato Modal
+      btnExtrato.addEventListener('click', () => {
+        let html = `
+          <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: var(--text-muted);">Saldo disponível:</span>
+            <span style="font-size: 16px; font-weight: 700; color: #2B2B33;">${formatMoney(state.saldo)}</span>
+          </div>
+          <div class="transaction-list">
+        `;
+        state.transacoes.forEach(t => {
+          html += `
+            <div class="transaction-item">
+              <div class="transaction-icon ${t.tipo}">${t.tipo === 'in' ? '+' : '-'}</div>
+              <div class="transaction-meta">
+                <div class="transaction-desc">${t.desc}</div>
+                <div class="transaction-date">${t.data}</div>
+              </div>
+              <div class="transaction-val ${t.tipo}">
+                ${t.tipo === 'in' ? '+ ' : '- '}${formatMoney(t.val)}
+              </div>
+            </div>
+          `;
+        });
+        html += `
+          </div>
+          <button id="btnBaixarExtrato" style="width: 100%; margin-top: 18px; padding: 12px; background: var(--accent); color: #FFF; border-radius: 14px; font-weight: 700; font-size: 13px;">
+            Exportar Comprovante (PDF)
+          </button>
+        `;
+        openSheet('Extrato da Conta', html);
+
+        document.getElementById('btnBaixarExtrato')?.addEventListener('click', () => {
+          showToast('Extrato baixado com sucesso!');
+          closeSheet();
+        });
+      });
+
+      // Notificações Modal
+      btnNotificacoes.addEventListener('click', () => {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="padding: 12px; background: #F8F9FA; border-radius: 12px; border-left: 4px solid var(--success);">
+              <div style="font-size: 13px; font-weight: 700;">Pix Recebido</div>
+              <div style="font-size: 12px; color: #555; margin-top: 2px;">Você recebeu R$ 150,00 de Carlos Eduardo.</div>
+              <span style="font-size: 10px; color: #999;">Há 2 horas</span>
+            </div>
+            <div style="padding: 12px; background: #F8F9FA; border-radius: 12px; border-left: 4px solid var(--accent);">
+              <div style="font-size: 13px; font-weight: 700;">Fatura Fechada</div>
+              <div style="font-size: 12px; color: #555; margin-top: 2px;">Sua fatura do cartão Elo Nanquim está pronta. Vencimento: 15/10.</div>
+              <span style="font-size: 10px; color: #999;">Ontem</span>
+            </div>
+            <div style="padding: 12px; background: #F8F9FA; border-radius: 12px; border-left: 4px solid #3F6FC4;">
+              <div style="font-size: 13px; font-weight: 700;">Dica de Segurança</div>
+              <div style="font-size: 12px; color: #555; margin-top: 2px;">Nunca informe senhas por telefone ou SMS. O Bradesco não pede sua chave de segurança.</div>
+              <span style="font-size: 10px; color: #999;">3 dias atrás</span>
+            </div>
+            <button id="btnLimparNotif" style="width: 100%; padding: 12px; background: #EEEEF2; color: #333; border-radius: 14px; font-weight: 600; font-size: 13px; margin-top: 6px;">
+              Marcar todas como lidas
+            </button>
+          </div>
+        `;
+        openSheet('Notificações', html);
+
+        document.getElementById('btnLimparNotif')?.addEventListener('click', () => {
+          state.notificacoes = 0;
+          badgeNotif.style.display = 'none';
+          showToast('Todas as notificações foram lidas');
+          closeSheet();
+        });
+      });
+
+      // Botão Sair
+      btnSair.addEventListener('click', () => {
+        const html = `
+          <div style="text-align: center; padding: 10px 0;">
+            <p style="font-size: 14px; color: #3A3A44; margin-bottom: 20px;">Deseja realmente encerrar sua sessão?</p>
+            <div style="display: flex; gap: 10px;">
+              <button id="btnCancelaSair" style="flex: 1; padding: 12px; background: #EFEFF4; border-radius: 14px; font-weight: 600; color: #333;">Cancelar</button>
+              <button id="btnConfirmaSair" style="flex: 1; padding: 12px; background: var(--accent); border-radius: 14px; font-weight: 700; color: #FFF;">Sair</button>
+            </div>
+          </div>
+        `;
+        openSheet('Sair da Conta', html);
+        document.getElementById('btnCancelaSair')?.addEventListener('click', closeSheet);
+        document.getElementById('btnConfirmaSair')?.addEventListener('click', () => {
+          closeSheet();
+          showToast('Sessão finalizada com segurança!');
+        });
+      });
+
+      // Ações dos botões Favoritos
+      document.querySelectorAll('.card-favorito').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.getAttribute('data-action');
+          handleFavoritoAction(action);
+        });
+      });
+
+      function handleFavoritoAction(action) {
+        switch(action) {
+          case 'pix':
+            openPixModal();
+            break;
+          case 'transfer':
+            openTransferModal();
+            break;
+          case 'pagamentos':
+            openPagamentosModal();
+            break;
+          case 'cartoes':
+            openCartoesModal();
+            break;
+          case 'emprestimos':
+            openEmprestimosModal();
+            break;
+          case 'investimentos':
+            openInvestimentosModal();
+            break;
+          case 'openfinance':
+            openOpenFinanceModal();
+            break;
+          case 'personalizar':
+            openPersonalizarModal();
+            break;
+        }
+      }
+
+      // Modal Pix com simulação interativa
+      function openPixModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div style="background: #F7F7FA; padding: 12px; border-radius: 14px; text-align: center; cursor: pointer;">
+                <div style="font-weight: 700; font-size: 13px; color: var(--accent);">Transferir Pix</div>
+                <div style="font-size: 11px; color: #666; margin-top: 2px;">Chave ou contato</div>
+              </div>
+              <div style="background: #F7F7FA; padding: 12px; border-radius: 14px; text-align: center; cursor: pointer;">
+                <div style="font-weight: 700; font-size: 13px; color: var(--accent);">Pix Copia e Cola</div>
+                <div style="font-size: 11px; color: #666; margin-top: 2px;">Pagar código</div>
+              </div>
+            </div>
+
+            <div style="background: #FFF; border: 1px solid #E5E5EA; border-radius: 14px; padding: 14px;">
+              <label style="font-size: 12px; font-weight: 600; color: #555;">Chave Pix (CPF, Celular, E-mail ou Aleatória):</label>
+              <input type="text" id="pixKeyInput" placeholder="Ex: 123.456.789-00" style="width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+              
+              <label style="font-size: 12px; font-weight: 600; color: #555; display: block; margin-top: 10px;">Valor (R$):</label>
+              <input type="number" id="pixValInput" placeholder="0,00" min="0.01" step="0.01" style="width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+
+              <button id="btnConfirmPix" style="width: 100%; margin-top: 14px; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; font-size: 14px;">
+                Enviar Pix Imediato
+              </button>
+            </div>
+          </div>
+        `;
+        openSheet('Área Pix', html);
+
+        document.getElementById('btnConfirmPix')?.addEventListener('click', () => {
+          const key = document.getElementById('pixKeyInput').value.trim();
+          const val = parseFloat(document.getElementById('pixValInput').value);
+
+          if (!key) {
+            alert('Por favor, informe a chave Pix.');
+            return;
+          }
+          if (isNaN(val) || val <= 0) {
+            alert('Por favor, informe um valor válido.');
+            return;
+          }
+          if (val > state.saldo) {
+            alert('Saldo insuficiente para esta transferência.');
+            return;
+          }
+
+          state.saldo -= val;
+          state.transacoes.unshift({
+            tipo: 'out',
+            desc: `Pix enviado (${key})`,
+            data: 'Agora',
+            val: val
+          });
+          updateBalanceDisplay();
+          closeSheet();
+          showToast(`Pix de ${formatMoney(val)} enviado com sucesso!`);
+        });
+      }
+
+      // Modal Transferências
+      function openTransferModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <p style="font-size: 13px; color: #555;">Transfira valores para contas Bradesco ou outros bancos via TED.</p>
+            <input type="text" placeholder="Banco de destino" style="width: 100%; padding: 10px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+            <input type="text" placeholder="Agência e Conta com dígito" style="width: 100%; padding: 10px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+            <input type="text" placeholder="Nome do favorecido" style="width: 100%; padding: 10px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+            <button onclick="document.getElementById('btnSheetClose').click(); alert('Transferência agendada com sucesso!');" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; margin-top: 10px;">
+              Continuar Transferência
+            </button>
+          </div>
+        `;
+        openSheet('Transferências TED', html);
+      }
+
+      // Modal Pagamentos
+      function openPagamentosModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <p style="font-size: 13px; color: #555;">Pague boletos de cobrança, água, luz, internet e tributos.</p>
+            <div style="background: #F7F7FA; padding: 14px; border-radius: 12px; text-align: center; border: 2px dashed #C8143C; cursor: pointer;">
+              <span style="font-size: 14px; font-weight: 700; color: var(--accent);">📷 Ler Código de Barras pela Câmera</span>
+            </div>
+            <input type="text" placeholder="Ou digite o código de barras (47 dígitos)" style="width: 100%; padding: 10px; border: 1px solid #D0D0D8; border-radius: 10px; font-size: 13px;" />
+            <button onclick="document.getElementById('btnSheetClose').click(); alert('Boleto identificado e processado!');" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700;">
+              Confirmar Pagamento
+            </button>
+          </div>
+        `;
+        openSheet('Pagamento de Boletos', html);
+      }
+
+      // Modal Cartões
+      function openCartoesModal() {
+        const html = `
+          <div>
+            <div class="virtual-card">
+              <div class="virtual-card-top">
+                <span>BRADESCO PRIME</span>
+                <span>ELO NANQUIM</span>
+              </div>
+              <div class="virtual-card-number">•••• •••• •••• 9842</div>
+              <div class="virtual-card-bottom">
+                <span>MATHEUS SILVA</span>
+                <span>EXP: 08/29</span>
+              </div>
+            </div>
+            
+            <div style="background: #F7F7FA; padding: 14px; border-radius: 14px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                <span>Limite Utilizado</span>
+                <span>R$ 1.240,50 / R$ 8.000,00</span>
+              </div>
+              <div style="width: 100%; height: 6px; background: #E0E0EA; border-radius: 3px; margin-top: 8px; overflow: hidden;">
+                <div style="width: 15.5%; height: 100%; background: var(--accent);"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button style="flex: 1; padding: 12px; background: #EFEFF4; border-radius: 12px; font-weight: 600; font-size: 13px;">Bloqueio Temporário</button>
+              <button style="flex: 1; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; font-size: 13px;">Ver CVV Dinâmico</button>
+            </div>
+          </div>
+        `;
+        openSheet('Meus Cartões', html);
+      }
+
+      // Modal Empréstimos
+      function openEmprestimosModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #EAF7EE; padding: 14px; border-radius: 14px; color: #1E7E34;">
+              <div style="font-weight: 700; font-size: 14px;">Crédito Pessoal Pré-Aprovado</div>
+              <div style="font-size: 12px; margin-top: 2px;">Limite liberado: <strong>R$ 15.000,00</strong></div>
+            </div>
+
+            <label style="font-size: 12px; font-weight: 600; color: #555;">Simular valor desejado:</label>
+            <input type="range" id="loanRange" min="1000" max="15000" step="500" value="5000" style="width: 100%; accent-color: var(--accent);" />
+            <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700;">
+              <span>Valor:</span>
+              <span id="loanVal">R$ 5.000,00</span>
+            </div>
+
+            <button onclick="document.getElementById('btnSheetClose').click(); alert('Proposta enviada para análise!');" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; margin-top: 10px;">
+              Contratar em 24x de R$ 268,40
+            </button>
+          </div>
+        `;
+        openSheet('Simular Empréstimo', html);
+
+        const range = document.getElementById('loanRange');
+        const valSpan = document.getElementById('loanVal');
+        if (range && valSpan) {
+          range.addEventListener('input', (e) => {
+            valSpan.textContent = formatMoney(parseFloat(e.target.value));
+          });
+        }
+      }
+
+      // Modal Investimentos
+      function openInvestimentosModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="background: #F7F7FA; padding: 14px; border-radius: 14px;">
+              <div style="font-size: 12px; color: #666;">Patrimônio investido</div>
+              <div style="font-size: 20px; font-weight: 700; color: #2B2B33; margin-top: 4px;">R$ 12.450,80</div>
+              <div style="font-size: 11px; color: var(--success); font-weight: 600; margin-top: 2px;">▲ +1.12% neste mês</div>
+            </div>
+            <div style="padding: 12px; border: 1px solid #E5E5EA; border-radius: 12px;">
+              <div style="font-weight: 700; font-size: 13px;">CDB Fácil Bradesco</div>
+              <div style="font-size: 11px; color: #666;">102% do CDI • Liquidez diária</div>
+            </div>
+            <div style="padding: 12px; border: 1px solid #E5E5EA; border-radius: 12px;">
+              <div style="font-weight: 700; font-size: 13px;">Tesouro Selic 2029</div>
+              <div style="font-size: 11px; color: #666;">Garantia do Tesouro Nacional</div>
+            </div>
+            <button onclick="document.getElementById('btnSheetClose').click();" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700;">
+              Aplicar em Novo Produto
+            </button>
+          </div>
+        `;
+        openSheet('Meus Investimentos', html);
+      }
+
+      // Modal Open Finance
+      function openOpenFinanceModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <p style="font-size: 13px; color: #555;">Compartilhe seus dados financeiros e receba taxas personalizadas e limites ampliados.</p>
+            <div style="padding: 12px; background: #F8F9FA; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 700; font-size: 13px;">Banco Itaú</div>
+                <div style="font-size: 11px; color: var(--success);">● Conectado até 20/12/2026</div>
+              </div>
+              <button style="font-size: 11px; color: var(--accent); font-weight: 700;">Gerenciar</button>
+            </div>
+            <button onclick="document.getElementById('btnSheetClose').click(); alert('Redirecionando para autorização...');" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; margin-top: 6px;">
+              + Compartilhar Nova Instituição
+            </button>
+          </div>
+        `;
+        openSheet('Open Finance Brasil', html);
+      }
+
+      // Modal Personalizar
+      function openPersonalizarModal() {
+        const html = `
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <p style="font-size: 13px; color: #555;">Selecione e organize os atalhos exibidos na sua tela inicial:</p>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #F7F7FA; border-radius: 10px;">
+              <span style="font-size: 13px; font-weight: 600;">Pix</span>
+              <span style="color: var(--success); font-weight: 700;">Ativado ✔</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #F7F7FA; border-radius: 10px;">
+              <span style="font-size: 13px; font-weight: 600;">Transferências</span>
+              <span style="color: var(--success); font-weight: 700;">Ativado ✔</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #F7F7FA; border-radius: 10px;">
+              <span style="font-size: 13px; font-weight: 600;">Pagamentos</span>
+              <span style="color: var(--success); font-weight: 700;">Ativado ✔</span>
+            </div>
+            <button onclick="document.getElementById('btnSheetClose').click();" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700; margin-top: 8px;">
+              Salvar Preferências
+            </button>
+          </div>
+        `;
+        openSheet('Personalizar Atalhos', html);
+      }
+
+      // Banner Cartão click
+      bannerCartao?.addEventListener('click', openCartoesModal);
+
+      // Carrossel de Ofertas
+      function setOferta(index) {
+        state.ofertaAtual = index;
+        const o = state.ofertas[index];
+        ofertaTitulo.textContent = o.titulo;
+        ofertaSub.textContent = o.sub;
+        ofertaIcon.innerHTML = o.icone;
+
+        dots.forEach((d, i) => {
+          d.classList.toggle('active', i === index);
+        });
+      }
+
+      dots.forEach(d => {
+        d.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.getAttribute('data-index'));
+          setOferta(idx);
+        });
+      });
+
+      cardOferta.addEventListener('click', () => {
+        const o = state.ofertas[state.ofertaAtual];
+        const html = `
+          <div style="text-align: center; padding: 10px 0;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #FDE8EC; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              ${o.icone}
+            </div>
+            <h4 style="font-size: 16px; font-weight: 700; color: #2B2B33;">${o.titulo}</h4>
+            <p style="font-size: 13px; color: #666; margin: 10px 0 20px;">${o.sub} Aproveite agora com condições exclusivas para sua conta.</p>
+            <button onclick="document.getElementById('btnSheetClose').click(); alert('Proposta solicitada com sucesso!');" style="width: 100%; padding: 12px; background: var(--accent); color: #FFF; border-radius: 12px; font-weight: 700;">
+              Quero esta oferta
+            </button>
+          </div>
+        `;
+        openSheet('Oferta Especial', html);
+      });
+
+      // Navegação por Abas (Bottom Nav)
+      const navItems = document.querySelectorAll('.nav-item');
+      const tabViews = document.querySelectorAll('.tab-view');
+
+      function switchTab(targetTabId) {
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('data-tab') === targetTabId);
+        });
+
+        tabViews.forEach(view => {
+          view.classList.toggle('active', view.id === targetTabId);
+        });
+      }
+
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const target = item.getAttribute('data-tab');
+          switchTab(target);
+        });
+      });
+
+      // Atalho rápido da BIA no cabeçalho
+      biaBarQuick.addEventListener('click', () => {
+        switchTab('tabChat');
+        document.getElementById('chatInput')?.focus();
+      });
+
+      // Lógica do Chat da BIA
+      const chatMessages = document.getElementById('chatMessages');
+      const chatInput = document.getElementById('chatInput');
+      const btnSendChat = document.getElementById('btnSendChat');
+
+      function appendChatMessage(sender, text) {
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${sender}`;
+        bubble.textContent = text;
+        chatMessages.appendChild(bubble);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function handleBiaChat(query) {
+        if (!query.trim()) return;
+        appendChatMessage('user', query);
+        chatInput.value = '';
+
+        // Resposta inteligente simulada
+        setTimeout(() => {
+          const lower = query.toLowerCase();
+          if (lower.includes('saldo')) {
+            appendChatMessage('bia', `Seu saldo atual disponível em conta corrente é ${formatMoney(state.saldo)}.`);
+          } else if (lower.includes('pix')) {
+            appendChatMessage('bia', 'Você pode fazer um Pix agora mesmo! Acesse o botão Pix na tela inicial para enviar por chave, QR Code ou Copia e Cola.');
+          } else if (lower.includes('fatura') || lower.includes('cartão')) {
+            appendChatMessage('bia', 'Sua fatura atual do cartão Elo Nanquim está em R$ 1.240,50 com vencimento em 15/10.');
+          } else if (lower.includes('empréstimo') || lower.includes('limite')) {
+            appendChatMessage('bia', 'Você tem um limite de empréstimo pré-aprovado de até R$ 15.000 com taxa a partir de 1,89% a.m.');
+          } else {
+            appendChatMessage('bia', `Entendi seu pedido sobre "${query}". Posso te ajudar a realizar transações, consultar extrato ou tirar dúvidas.`);
+          }
+        }, 600);
+      }
+
+      btnSendChat.addEventListener('click', () => {
+        handleBiaChat(chatInput.value);
+      });
+
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleBiaChat(chatInput.value);
+      });
+
+      document.querySelectorAll('.quick-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const ask = chip.getAttribute('data-ask');
+          handleBiaChat(ask);
+        });
+      });
+
+    })();
+  </script>
+
 </body>
 </html>
